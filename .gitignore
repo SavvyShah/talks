@@ -1,0 +1,10 @@
+# Jekyll site gitignore
+_site/
+.sass-cache/
+.jekyll-cache/
+.jekyll-metadata
+.bundle
+Gemfile.lock
+node_modules/
+vendor/
+

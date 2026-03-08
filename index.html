@@ -1,0 +1,14 @@
+---
+layout: default
+title: Home
+---
+
+<h1>Available Presentations</h1>
+
+<ul>
+  {% for presentation in site.presentations %}
+    <li>
+      <a href="{{ presentation.url | relative_url }}">{{ presentation.title }}</a>
+    </li>
+  {% endfor %}
+</ul>
