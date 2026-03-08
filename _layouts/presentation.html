@@ -12,6 +12,16 @@
 
     <!-- Theme used for syntax highlighted code -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/highlight/monokai.min.css">
+
+    <style>
+      /* Custom styles for Venn diagrams */
+      .reveal p{
+        font-size: 0.5em;
+      }
+      .reveal img{
+        max-width: 50%;
+      }
+    </style>
   </head>
   <body>
     <div class="reveal">
@@ -37,19 +47,55 @@
     </div>
     <div style="visibility: hidden;">{{ content }}</div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/venn.js@0.2.20/venn.js"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/notes/notes.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/markdown/markdown.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/highlight/highlight.min.js"></script>
-    <script>
+    <script type="module">
+
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
       // More info about initialization & config:
       // - https://revealjs.com/initialization/
       // - https://revealjs.com/config/
       Reveal.initialize({
         hash: true,
+        center: false,
 
         // Learn about plugins: https://revealjs.com/plugins/
         plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+      }).then(() => {
+        const renderVenn = () => {
+          document.querySelectorAll('.venn').forEach(el => {
+            // If it already has an svg child, it's already rendered
+            if (el.querySelector('svg')) return;
+
+            const text = el.innerText.trim();
+            if (!text) return;
+
+            try {
+              const data = JSON.parse(text);
+              if (Array.isArray(data)) {
+                el.innerText = '';
+                const chart = venn.VennDiagram();
+                d3.select(el).datum(data).call(chart);
+              }
+            } catch (e) {
+              // Only log if it's not a vertical slide separator or markdown quirk
+              if (text.length > 5) {
+                console.error("Failed to parse Venn JSON:", e, "Content was:", text);
+              }
+            }
+          });
+        };
+        renderVenn();
+
+        Reveal.on('slidechanged', renderVenn);
+        Reveal.on('slidetransitionend', ()=>{
+          mermaid.initialize({ startOnLoad: true });
+        });
       });
     </script>
   </body>
