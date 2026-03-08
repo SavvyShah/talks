@@ -4,7 +4,7 @@ description: >-
   A collection of presentations built with Jekyll and Reveal.js.
 
 baseurl: "/talks" # the subpath of your site, this is the repository name incase you are deploying using Github Pages e.g. /blog
-url: "" # the base hostname & protocol for your site, e.g. http://example.com
+url: "/talks" # the base hostname & protocol for your site, this is the repository name incase you are deploying using Github Pages e.g. http://example.com
 
 collections:
   presentations:
